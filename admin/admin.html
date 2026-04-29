@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Waterboom Situsari Garut</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --biru: #0ea5e9;
+  --biru-tua: #0369a1;
+  --biru-muda: #e0f2fe;
+  --hijau: #22c55e;
+  --kuning: #f59e0b;
+  --merah: #ef4444;
+  --ungu: #8b5cf6;
+  --putih: #ffffff;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --teks: #1e293b;
+  --teks-abu: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--teks); }
+
+/* LOGIN */
+.login-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+.login-overlay.aktif { display: flex; }
+.login-box {
+  background: white;
+  border-radius: 24px;
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 380px;
+  margin: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.login-logo { text-align: center; margin-bottom: 24px; }
+.login-logo .icon { font-size: 48px; }
+.login-logo h2 { font-size: 22px; font-weight: 900; color: var(--teks); margin-top: 8px; }
+.login-logo p { font-size: 13px; color: var(--teks-abu); }
+.login-box .form-group { margin-bottom: 16px; }
+.login-box label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--teks); }
+.login-box input {
+  width: 100%; padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  transition: border-color 0.2s;
+}
+.login-box input:focus { outline: none; border-color: var(--biru); }
+.btn-login {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, #0369a1, #0ea5e9);
+  color: white; border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 800;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  margin-top: 8px;
+  transition: opacity 0.2s;
+}
+.btn-login:hover { opacity: 0.9; }
+.login-error { color: var(--merah); font-size: 12px; text-align: center; margin-top: 8px; display: none; }
+
+/* SIDEBAR */
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 240px; background: linear-gradient(180deg, #0369a1 0%, #075985 100%);
+  color: white; display: flex; flex-direction: column;
+  padding: 0; flex-shrink: 0;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+.sidebar-logo .icon { font-size: 36px; }
+.sidebar-logo h2 { font-size: 14px; font-weight: 800; margin-top: 6px; line-height: 1.3; }
+.sidebar-logo p { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 16px 12px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 12px;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 4px;
+  user-select: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+.nav-item.aktif { background: rgba(255,255,255,0.2); color: white; }
+.nav-item .ico { font-size: 18px; width: 22px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--merah);
+  color: white;
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+.sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.1); }
+.btn-keluar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 12px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  color: rgba(255,255,255,0.7);
+  background: none; border: none; width: 100%;
+  font-family: 'Nunito', sans-serif;
+}
+.btn-keluar:hover { background: rgba(255,255,255,0.1); color: white; }
+
+/* MAIN CONTENT */
+.main { margin-left: 240px; padding: 24px; flex: 1; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; gap: 12px;
+}
+.topbar h1 { font-size: 22px; font-weight: 900; color: var(--teks); }
+.topbar-right { display: flex; gap: 10px; align-items: center; }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--card); border-radius: 16px;
+  padding: 18px 16px; box-shadow: var(--shadow);
+  border-left: 4px solid var(--biru);
+  transition: transform 0.2s;
+}
+.stat-card:hover { transform: translateY(-2px); }
+.stat-card.lunas { border-left-color: var(--hijau); }
+.stat-card.belum { border-left-color: var(--merah); }
+.stat-card.pending { border-left-color: var(--kuning); }
+.stat-card.income { border-left-color: var(--ungu); }
+.stat-card .label { font-size: 11px; font-weight: 700; color: var(--teks-abu); text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-card .value { font-size: 26px; font-weight: 900; color: var(--teks); margin: 6px 0 0; }
+.stat-card.income .value { font-size: 18px; color: var(--ungu); }
+
+/* FILTER BAR */
+.filter-bar {
+  background: var(--card); border-radius: 16px;
+  padding: 16px 20px; box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.filter-bar input, .filter-bar select {
+  padding: 9px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--teks);
+  transition: border-color 0.2s;
+}
+.filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--biru); }
+.filter-bar input { flex: 1; min-width: 160px; }
+.btn-reset {
+  padding: 9px 16px;
+  background: var(--bg); border: 2px solid var(--border);
+  border-radius: 10px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  transition: all 0.2s;
+}
+.btn-reset:hover { background: var(--border); }
+
+/* AKSI BUTTONS */
+.btn-aksi {
+  padding: 9px 16px;
+  border-radius: 10px; font-size: 13px; font-weight: 800;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  border: none; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+}
+.btn-tambah { background: var(--biru); color: white; }
+.btn-tambah:hover { background: var(--biru-tua); }
+.btn-export { background: var(--hijau); color: white; }
+.btn-export:hover { background: #16a34a; }
+
+/* TABLE */
+.table-card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+.table-header {
+  padding: 16px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.table-header h3 { font-size: 15px; font-weight: 800; }
+.table-count { font-size: 12px; color: var(--teks-abu); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
+thead tr { background: var(--bg); }
+th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--teks-abu);
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+td {
+  padding: 13px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f8fafc; }
+.kode-cell { font-weight: 800; color: var(--biru); font-family: monospace; font-size: 14px; }
+.nama-cell { font-weight: 700; }
+.hp-cell { color: var(--teks-abu); }
+
+/* STATUS BADGE */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 800;
+  white-space: nowrap;
+}
+.badge.lunas { background: #f0fdf4; color: #16a34a; }
+.badge.belum { background: #fef2f2; color: var(--merah); }
+.badge.pending { background: #fffbeb; color: #d97706; }
+.badge.weekday { background: #f0f9ff; color: var(--biru-tua); }
+.badge.weekend { background: #fffbeb; color: #d97706; }
+.badge.libur { background: #fef2f2; color: var(--merah); }
+.badge.qris { background: #f0f9ff; color: var(--biru); }
+.badge.loket { background: #f0fdf4; color: #16a34a; }
+.badge.transfer { background: #faf5ff; color: var(--ungu); }
+
+/* AKSI CELL */
+.aksi-cell { display: flex; gap: 6px; }
+.btn-cell {
+  padding: 5px 10px; border-radius: 8px;
+  font-size: 11px; font-weight: 800;
+  cursor: pointer; border: none; font-family: 'Nunito', sans-serif;
+  transition: all 0.2s;
+}
+.btn-detail { background: var(--biru-muda); color: var(--biru-tua); }
+.btn-detail:hover { background: var(--biru); color: white; }
+.btn-lunas { background: #f0fdf4; color: #16a34a; }
+.btn-lunas:hover { background: var(--hijau); color: white; }
+.btn-hapus { background: #fef2f2; color: var(--merah); }
+.btn-hapus:hover { background: var(--merah); color: white; }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--teks-abu);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state p { font-size: 14px; }
+
+/* MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 500; justify-content: center; align-items: center;
+  padding: 20px; backdrop-filter: blur(4px);
+}
+.modal-overlay.aktif { display: flex; }
+.modal-box {
+  background: white; border-radius: 20px;
+  width: 100%; max-width: 480px;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: popIn 0.25s ease;
+}
+@keyframes popIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+.modal-head {
+  padding: 20px 24px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 17px; font-weight: 800; }
+.btn-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--teks-abu); padding: 4px; }
+.btn-close:hover { color: var(--teks); }
+.modal-body { padding: 20px 24px; }
+.detail-row {
+  display: flex; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px; gap: 12px;
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-row .key { color: var(--teks-abu); font-weight: 600; flex-shrink: 0; }
+.detail-row .val { font-weight: 800; text-align: right; }
+.modal-foot {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 10px;
+}
+
+/* FORM TAMBAH */
+.form-tambah .form-group { margin-bottom: 14px; }
+.form-tambah label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.form-tambah input, .form-tambah select {
+  width: 100%; padding: 10px 12px;
+  border: 2px solid var(--border); border-radius: 10px;
+  font-size: 13px; font-family: 'Nunito', sans-serif;
+  transition: border-color 0.2s;
+}
+.form-tambah input:focus, .form-tambah select:focus { outline: none; border-color: var(--biru); }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* LOADING */
+.loading-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--biru);
+  z-index: 9998;
+  animation: loadingSlide 1.5s infinite;
+  display: none;
+}
+.loading-bar.aktif { display: block; }
+@keyframes loadingSlide {
+  0%{transform:scaleX(0);transform-origin:left}
+  50%{transform:scaleX(0.7);transform-origin:left}
+  100%{transform:scaleX(1);transform-origin:left}
+}
+
+/* LIVE DOT */
+.live-dot {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--hijau); font-weight: 700;
+}
+.live-dot .dot { width: 8px; height: 8px; background: var(--hijau); border-radius: 50%; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 16px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 1200px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #1e293b; color: white;
+  padding: 12px 20px; border-radius: 12px;
+  font-size: 14px; font-weight: 700;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  z-index: 9999;
+  animation: toastIn 0.3s ease;
+  display: flex; align-items: center; gap: 8px;
+}
+@keyframes toastIn { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loading-bar"></div>
+
+<!-- LOGIN -->
+<div class="login-overlay aktif" id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="icon">🏊</div>
+      <h2>Admin Panel</h2>
+      <p>Waterboom Situsari Garut</p>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="Username" onkeypress="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Password" onkeypress="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" onclick="doLogin()">🔒 Masuk</button>
+    <div class="login-error" id="login-error">Username atau password salah!</div>
+    <p style="font-size:11px;color:#94a3b8;text-align:center;margin-top:12px;">Default: admin / waterboom2025</p>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="icon">🏊</div>
+      <h2>Waterboom Situsari</h2>
+      <p>Admin Panel</p>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item aktif" onclick="bukaHalaman('dashboard')">
+        <span class="ico">📊</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="bukaHalaman('booking')">
+        <span class="ico">🎫</span> Data Booking
+        <span class="nav-badge" id="badge-belum">0</span>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <a href="/" style="text-decoration:none;">
+        <button class="btn-keluar">🌊 Lihat Halaman Booking</button>
+      </a>
+      <button class="btn-keluar" onclick="doLogout()" style="margin-top:6px;">🚪 Keluar</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div>
+        <h1 id="page-title">📊 Dashboard</h1>
+        <div class="live-dot" id="live-status">
+          <div class="dot"></div>
+          Realtime · Terhubung ke Firebase
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn-aksi btn-tambah" onclick="bukaModalTambah()">➕ Tambah Booking</button>
+        <button class="btn-aksi btn-export" onclick="exportCSV()">📥 Export CSV</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">🎫 Total Booking</div>
+        <div class="value" id="stat-total">0</div>
+      </div>
+      <div class="stat-card lunas">
+        <div class="label">✅ Lunas</div>
+        <div class="value" id="stat-lunas">0</div>
+      </div>
+      <div class="stat-card belum">
+        <div class="label">❌ Belum Bayar</div>
+        <div class="value" id="stat-belum">0</div>
+      </div>
+      <div class="stat-card pending">
+        <div class="label">⏳ Pending</div>
+        <div class="value" id="stat-pending">0</div>
+      </div>
+      <div class="stat-card income">
+        <div class="label">💰 Total Pemasukan</div>
+        <div class="value" id="stat-income">Rp 0</div>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+      <input type="text" id="cari" placeholder="🔍 Cari nama, kode, HP..." oninput="renderTabel()">
+      <select id="filter-status" onchange="renderTabel()">
+        <option value="">Semua Status</option>
+        <option value="lunas">Lunas</option>
+        <option value="belum_bayar">Belum Bayar</option>
+        <option value="pending">Pending</option>
+      </select>
+      <select id="filter-hari" onchange="renderTabel()">
+        <option value="">Semua Jenis Hari</option>
+        <option value="weekday">Weekday</option>
+        <option value="weekend">Weekend</option>
+        <option value="libur">Hari Libur</option>
+      </select>
+      <select id="filter-metode" onchange="renderTabel()">
+        <option value="">Semua Metode</option>
+        <option value="qris">QRIS</option>
+        <option value="loket">Bayar di Loket</option>
+        <option value="bca">Transfer BCA</option>
+        <option value="bri">Transfer BRI</option>
+      </select>
+      <button class="btn-reset" onclick="resetFilter()">↺ Reset</button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <h3>📋 Data Booking</h3>
+        <span class="table-count" id="tabel-count">0 data</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Kode</th>
+              <th>Nama Pemesan</th>
+              <th>No. HP</th>
+              <th>Tgl Kunjungan</th>
+              <th>Jam</th>
+              <th>Jenis Hari</th>
+              <th>Tiket</th>
+              <th>Total</th>
+              <th>Metode</th>
+              <th>Status Bayar</th>
+              <th>Sumber</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="icon">📋</div>
+        <p>Belum ada data booking</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETAIL -->
+<div class="modal-overlay" id="modal-detail">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>📋 Detail Booking</h3>
+      <button class="btn-close" onclick="tutupModal('modal-detail')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-detail-body"></div>
+    <div class="modal-foot" id="modal-detail-foot"></div>
+  </div>
+</div>
+
+<!-- MODAL TAMBAH -->
+<div class="modal-overlay" id="modal-tambah">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>➕ Tambah Booking Manual</h3>
+      <button class="btn-close" onclick="tutupModal('modal-tambah')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-tambah">
+        <div class="form-group">
+          <label>Nama Lengkap *</label>
+          <input type="text" id="t-nama" placeholder="Nama pemesan">
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>No. HP *</label>
+            <input type="tel" id="t-nohp" placeholder="08xxxxxxxxxx">
+          </div>
+          <div class="form-group">
+            <label>Asal Kota</label>
+            <input type="text" id="t-kota" placeholder="Kota asal">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Tanggal Kunjungan *</label>
+            <input type="date" id="t-tanggal" onchange="updateJenisTambah()">
+          </div>
+          <div class="form-group">
+            <label>Jam Masuk *</label>
+            <select id="t-jam">
+              <option value="">-- Pilih --</option>
+              <option>08:00</option><option>09:00</option><option>10:00</option>
+              <option>11:00</option><option>12:00</option><option>13:00</option>
+              <option>14:00</option><option>15:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Jenis Hari</label>
+            <input type="text" id="t-jenis" readonly style="background:#f8fafc;color:#64748b;">
+          </div>
+          <div class="form-group">
+            <label>Jumlah Tiket *</label>
+            <input type="number" id="t-jumlah" min="1" value="1" oninput="updateTotalTambah()">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Metode Pembayaran</label>
+            <select id="t-metode">
+              <option value="loket">Bayar di Loket</option>
+              <option value="qris">QRIS</option>
+              <option value="bca">Transfer BCA</option>
+              <option value="bri">Transfer BRI</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status Pembayaran</label>
+            <select id="t-status">
+              <option value="belum_bayar">Belum Bayar</option>
+              <option value="pending">Pending</option>
+              <option value="lunas">Lunas</option>
+            </select>
+          </div>
+        </div>
+        <div style="background:#f0f9ff;border-radius:12px;padding:12px 14px;font-size:13px;color:#0369a1;font-weight:700;">
+          💰 Total: <span id="t-total" style="font-size:16px;">Rp 0</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-aksi btn-tambah" style="flex:1" onclick="simpanTambah()">💾 Simpan Booking</button>
+      <button class="btn-aksi" style="background:var(--bg);color:var(--teks);flex:0 0 auto" onclick="tutupModal('modal-tambah')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, update, remove, push, set }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// =====================================================
+// 🔥 GANTI DENGAN FIREBASE CONFIG ANDA (SAMA SEPERTI index.html)
+// =====================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDe21NfWg9BnzjgrRlx-fQfOyfWcBGom3E",
+  authDomain: "waterboom-situsari-829af.firebaseapp.com",
+  databaseURL: "https://waterboom-situsari-829af-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "waterboom-situsari-829af",
+  storageBucket: "waterboom-situsari-829af.firebasestorage.app",
+  messagingSenderId: "999272040230",
+  appId: "1:999272040230:web:240dcea121d4237297a3e7"
+};
+// =====================================================
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window._db = db;
+window._ref = ref;
+window._onValue = onValue;
+window._update = update;
+window._remove = remove;
+window._push = push;
+window._set = set;
+window._firebaseReady = true;
+
+// Mulai listener realtime
+window.startRealtimeListener = function() {
+  const bookRef = ref(db, 'bookings');
+  onValue(bookRef, (snapshot) => {
+    const data = snapshot.val() || {};
+    window._allBookings = Object.entries(data).map(([id, val]) => ({ ...val, _id: id }));
+    window._allBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    updateStats();
+    renderTabel();
+    hiddenLoading();
+  }, (err) => {
+    console.error('Firebase error:', err);
+    document.getElementById('live-status').innerHTML = '<span style="color:var(--merah)">⚠️ Gagal terhubung ke Firebase</span>';
+  });
+};
+</script>
+
+<script>
+// ===== KONFIGURASI =====
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'waterboom2025';
+
+const HARGA = { weekday: 20000, weekend: 25000, libur: 30000 };
+const LIBUR_NASIONAL = [
+  "2025-01-01","2025-01-27","2025-01-28","2025-01-29",
+  "2025-02-12","2025-03-29","2025-03-31",
+  "2025-04-01","2025-04-18","2025-04-20",
+  "2025-05-01","2025-05-12","2025-05-29",
+  "2025-06-01","2025-06-06","2025-06-07","2025-06-08","2025-06-09",
+  "2025-07-07","2025-08-17",
+  "2025-09-05","2025-10-02","2025-12-25","2025-12-26"
+];
+
+window._allBookings = [];
+let selectedBooking = null;
+
+// ===== LOGIN =====
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-overlay').classList.remove('aktif');
+    sessionStorage.setItem('wb_admin', '1');
+    showLoading();
+    if (window._firebaseReady) {
+      window.startRealtimeListener();
+    } else {
+      setTimeout(() => {
+        if (window.startRealtimeListener) window.startRealtimeListener();
+      }, 1500);
+    }
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    setTimeout(() => document.getElementById('login-error').style.display = 'none', 3000);
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('wb_admin');
+  document.getElementById('login-overlay').classList.add('aktif');
+}
+
+// Auto login jika session masih ada
+if (sessionStorage.getItem('wb_admin')) {
+  document.getElementById('login-overlay').classList.remove('aktif');
+  showLoading();
+  const interval = setInterval(() => {
+    if (window._firebaseReady) {
+      clearInterval(interval);
+      window.startRealtimeListener();
+    }
+  }, 300);
+}
+
+function showLoading() { document.getElementById('loading-bar').classList.add('aktif'); }
+function hiddenLoading() { document.getElementById('loading-bar').classList.remove('aktif'); }
+
+// ===== STATS =====
+function updateStats() {
+  const all = window._allBookings;
+  const lunas = all.filter(b => b.statusBayar === 'lunas');
+  const belum = all.filter(b => b.statusBayar === 'belum_bayar');
+  const pending = all.filter(b => b.statusBayar === 'pending');
+  const income = lunas.reduce((s, b) => s + (Number(b.total)||0), 0);
+
+  document.getElementById('stat-total').textContent = all.length;
+  document.getElementById('stat-lunas').textContent = lunas.length;
+  document.getElementById('stat-belum').textContent = belum.length;
+  document.getElementById('stat-pending').textContent = pending.length;
+  document.getElementById('stat-income').textContent = 'Rp ' + income.toLocaleString('id-ID');
+  document.getElementById('badge-belum').textContent = belum.length + pending.length;
+}
+
+// ===== RENDER TABLE =====
+function renderTabel() {
+  const cari = document.getElementById('cari').value.toLowerCase();
+  const filterStatus = document.getElementById('filter-status').value;
+  const filterHari = document.getElementById('filter-hari').value;
+  const filterMetode = document.getElementById('filter-metode').value;
+
+  let data = window._allBookings.filter(b => {
+    const matchCari = !cari ||
+      (b.nama||'').toLowerCase().includes(cari) ||
+      (b.kode||'').toLowerCase().includes(cari) ||
+      (b.nohp||'').includes(cari);
+    const matchStatus = !filterStatus || b.statusBayar === filterStatus;
+    const matchHari = !filterHari || b.jenisHari === filterHari;
+    const matchMetode = !filterMetode || b.metode === filterMetode;
+    return matchCari && matchStatus && matchHari && matchMetode;
+  });
+
+  document.getElementById('tabel-count').textContent = data.length + ' data';
+  const tbody = document.getElementById('tbody');
+
+  if (data.length === 0) {
+    tbody.innerHTML = '';
+    document.getElementById('empty-state').style.display = 'block';
+    return;
+  }
+  document.getElementById('empty-state').style.display = 'none';
+
+  tbody.innerHTML = data.map((b, i) => `
+    <tr>
+      <td style="color:var(--teks-abu);font-size:12px;">${i+1}</td>
+      <td class="kode-cell">${b.kode||'-'}</td>
+      <td class="nama-cell">${b.nama||'-'}</td>
+      <td class="hp-cell">${b.nohp||'-'}</td>
+      <td>${formatTanggal(b.tanggal)}</td>
+      <td>${b.jam||'-'} WIB</td>
+      <td><span class="badge ${b.jenisHari}">${labelHari(b.jenisHari)}</span></td>
+      <td><b>${b.jumlah||0}</b> org</td>
+      <td style="font-weight:800;color:var(--biru-tua)">Rp ${Number(b.total||0).toLocaleString('id-ID')}</td>
+      <td><span class="badge ${metodeClass(b.metode)}">${labelMetode(b.metode)}</span></td>
+      <td><span class="badge ${b.statusBayar}">${labelStatus(b.statusBayar)}</span></td>
+      <td style="font-size:11px;color:var(--teks-abu)">${b.sumber||'manual'}</td>
+      <td>
+        <div class="aksi-cell">
+          <button class="btn-cell btn-detail" onclick="bukaDetail('${b._id}')">Detail</button>
+          ${b.statusBayar !== 'lunas' ? `<button class="btn-cell btn-lunas" onclick="tandaiLunas('${b._id}')">✓ Lunas</button>` : ''}
+          <button class="btn-cell btn-hapus" onclick="hapusBooking('${b._id}','${b.kode}')">✕</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function resetFilter() {
+  document.getElementById('cari').value = '';
+  document.getElementById('filter-status').value = '';
+  document.getElementById('filter-hari').value = '';
+  document.getElementById('filter-metode').value = '';
+  renderTabel();
+}
+
+// ===== DETAIL =====
+function bukaDetail(id) {
+  const b = window._allBookings.find(x => x._id === id);
+  if (!b) return;
+  selectedBooking = b;
+
+  document.getElementById('modal-detail-body').innerHTML = `
+    <div class="detail-row"><span class="key">Kode Booking</span><span class="val" style="color:var(--biru);font-size:15px;letter-spacing:2px;">${b.kode||'-'}</span></div>
+    <div class="detail-row"><span class="key">Nama</span><span class="val">${b.nama||'-'}</span></div>
+    <div class="detail-row"><span class="key">No. HP</span><span class="val">${b.nohp||'-'}</span></div>
+    <div class="detail-row"><span class="key">Asal Kota</span><span class="val">${b.kota||'-'}</span></div>
+    <div class="detail-row"><span class="key">Tanggal Kunjungan</span><span class="val">${formatTanggalFull(b.tanggal)}</span></div>
+    <div class="detail-row"><span class="key">Jam Masuk</span><span class="val">${b.jam||'-'} WIB</span></div>
+    <div class="detail-row"><span class="key">Jenis Hari</span><span class="val">${labelHari(b.jenisHari)}</span></div>
+    <div class="detail-row"><span class="key">Jumlah Tiket</span><span class="val">${b.jumlah||0} orang</span></div>
+    <div class="detail-row"><span class="key">Total Bayar</span><span class="val" style="color:var(--biru);font-size:15px;">Rp ${Number(b.total||0).toLocaleString('id-ID')}</span></div>
+    <div class="detail-row"><span class="key">Metode Pembayaran</span><span class="val">${labelMetode(b.metode)}</span></div>
+    <div class="detail-row"><span class="key">Status Pembayaran</span><span class="val"><span class="badge ${b.statusBayar}">${labelStatus(b.statusBayar)}</span></span></div>
+    <div class="detail-row"><span class="key">Sumber Booking</span><span class="val">${b.sumber||'manual'}</span></div>
+    <div class="detail-row"><span class="key">Waktu Booking</span><span class="val">${formatWaktu(b.createdAt)}</span></div>`;
+
+  document.getElementById('modal-detail-foot').innerHTML = `
+    ${b.statusBayar !== 'lunas' ? `<button class="btn-aksi btn-tambah" onclick="tandaiLunas('${b._id}');tutupModal('modal-detail')">✅ Tandai Lunas</button>` : ''}
+    ${b.statusBayar === 'lunas' ? '' : `<button class="btn-aksi" style="background:#fef2f2;color:var(--merah)" onclick="tandaiBelum('${b._id}');tutupModal('modal-detail')">❌ Belum Bayar</button>`}
+    <button class="btn-aksi" style="background:var(--bg);color:var(--teks)" onclick="tutupModal('modal-detail')">Tutup</button>`;
+
+  document.getElementById('modal-detail').classList.add('aktif');
+}
+
+// ===== UPDATE STATUS =====
+async function tandaiLunas(id) {
+  if (!window._firebaseReady) return;
+  try {
+    await window._update(window._ref(window._db, 'bookings/' + id), { statusBayar: 'lunas' });
+    showToast('✅ Status berhasil diubah ke Lunas');
+  } catch(e) { alert('Gagal update: ' + e.message); }
+}
+
+async function tandaiBelum(id) {
+  if (!window._firebaseReady) return;
+  try {
+    await window._update(window._ref(window._db, 'bookings/' + id), { statusBayar: 'belum_bayar' });
+    showToast('❌ Status diubah ke Belum Bayar');
+  } catch(e) { alert('Gagal update: ' + e.message); }
+}
+
+async function hapusBooking(id, kode) {
+  if (!confirm(`Hapus booking ${kode}?`)) return;
+  try {
+    await window._remove(window._ref(window._db, 'bookings/' + id));
+    showToast('🗑️ Booking ' + kode + ' dihapus');
+  } catch(e) { alert('Gagal hapus: ' + e.message); }
+}
+
+// ===== TAMBAH MANUAL =====
+function bukaModalTambah() {
+  document.getElementById('t-nama').value = '';
+  document.getElementById('t-nohp').value = '';
+  document.getElementById('t-kota').value = '';
+  document.getElementById('t-tanggal').value = '';
+  document.getElementById('t-jam').value = '';
+  document.getElementById('t-jenis').value = '';
+  document.getElementById('t-jumlah').value = '1';
+  document.getElementById('t-metode').value = 'loket';
+  document.getElementById('t-status').value = 'belum_bayar';
+  document.getElementById('t-total').textContent = 'Rp 0';
+  document.getElementById('modal-tambah').classList.add('aktif');
+}
+
+function getJenisHari(tglStr) {
+  if (!tglStr) return null;
+  if (LIBUR_NASIONAL.includes(tglStr)) return 'libur';
+  const d = new Date(tglStr + 'T00:00:00');
+  const dow = d.getDay();
+  if (dow === 0 || dow === 6) return 'weekend';
+  return 'weekday';
+}
+
+function updateJenisTambah() {
+  const tgl = document.getElementById('t-tanggal').value;
+  const jenis = getJenisHari(tgl);
+  const labelMap = { weekday: 'Weekday', weekend: 'Weekend', libur: 'Hari Libur' };
+  document.getElementById('t-jenis').value = jenis ? labelMap[jenis] : '';
+  updateTotalTambah();
+}
+
+function updateTotalTambah() {
+  const tgl = document.getElementById('t-tanggal').value;
+  const jenis = getJenisHari(tgl);
+  const jumlah = parseInt(document.getElementById('t-jumlah').value) || 0;
+  const total = jenis ? HARGA[jenis] * jumlah : 0;
+  document.getElementById('t-total').textContent = 'Rp ' + total.toLocaleString('id-ID');
+}
+
+async function simpanTambah() {
+  const nama = document.getElementById('t-nama').value.trim();
+  const nohp = document.getElementById('t-nohp').value.trim();
+  const tanggal = document.getElementById('t-tanggal').value;
+  const jam = document.getElementById('t-jam').value;
+  const jumlah = parseInt(document.getElementById('t-jumlah').value);
+  const metode = document.getElementById('t-metode').value;
+  const statusBayar = document.getElementById('t-status').value;
+  const kota = document.getElementById('t-kota').value.trim();
+
+  if (!nama||!nohp||!tanggal||!jam||!jumlah) { alert('Lengkapi data yang wajib diisi!'); return; }
+
+  const jenisHari = getJenisHari(tanggal);
+  const total = HARGA[jenisHari] * jumlah;
+  const kode = 'WB' + Date.now().toString().slice(-6);
+
+  const data = {
+    kode, nama, nohp, tanggal, jam,
+    jenisHari, jumlah, total, kota,
+    metode, statusBayar,
+    createdAt: new Date().toISOString(),
+    sumber: 'manual'
+  };
+
+  try {
+    showLoading();
+    const bookRef = window._push(window._ref(window._db, 'bookings'));
+    await window._set(bookRef, data);
+    tutupModal('modal-tambah');
+    showToast('✅ Booking ' + kode + ' berhasil ditambahkan!');
+  } catch(e) {
+    alert('Gagal simpan: ' + e.message);
+  }
+}
+
+// ===== EXPORT CSV =====
+function exportCSV() {
+  const data = window._allBookings;
+  if (data.length === 0) { alert('Tidak ada data untuk diexport!'); return; }
+
+  const header = ['Kode','Nama','No HP','Kota','Tanggal','Jam','Jenis Hari','Jumlah','Total','Metode','Status','Sumber','Waktu Booking'];
+  const rows = data.map(b => [
+    b.kode||'', b.nama||'', b.nohp||'', b.kota||'',
+    b.tanggal||'', b.jam||'', b.jenisHari||'',
+    b.jumlah||0, b.total||0,
+    b.metode||'', b.statusBayar||'', b.sumber||'',
+    b.createdAt||''
+  ]);
+
+  const csv = [header, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'booking_waterboom_' + new Date().toLocaleDateString('id-ID').replace(/\//g,'-') + '.csv';
+  a.click();
+  showToast('📥 CSV berhasil didownload!');
+}
+
+// ===== UTILS =====
+function tutupModal(id) { document.getElementById(id).classList.remove('aktif'); }
+
+function formatTanggal(str) {
+  if (!str) return '-';
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function formatTanggalFull(str) {
+  if (!str) return '-';
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+
+function formatWaktu(str) {
+  if (!str) return '-';
+  const d = new Date(str);
+  return d.toLocaleString('id-ID');
+}
+
+function labelStatus(s) {
+  const m = { lunas:'✅ Lunas', belum_bayar:'❌ Belum Bayar', pending:'⏳ Pending' };
+  return m[s] || s;
+}
+
+function labelHari(h) {
+  const m = { weekday:'Weekday', weekend:'Weekend', libur:'Hari Libur' };
+  return m[h] || h;
+}
+
+function labelMetode(m) {
+  const map = { qris:'QRIS', loket:'Loket', bca:'BCA', bri:'BRI', bni:'BNI' };
+  return map[m] || m;
+}
+
+function metodeClass(m) {
+  if (m === 'qris') return 'qris';
+  if (m === 'loket') return 'loket';
+  return 'transfer';
+}
+
+function bukaHalaman(h) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('aktif'));
+  event.currentTarget.classList.add('aktif');
+  document.getElementById('page-title').textContent = h === 'dashboard' ? '📊 Dashboard' : '🎫 Data Booking';
+}
+
+function showToast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// Close modal on overlay click
+['modal-detail','modal-tambah'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function(e) {
+    if (e.target === this) tutupModal(id);
+  });
+});
+</script>
+</body>
+</html>
