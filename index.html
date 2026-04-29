@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waterboom Situsari Garut - Booking Tiket</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --biru: #0ea5e9;
+  --biru-tua: #0369a1;
+  --biru-muda: #e0f2fe;
+  --hijau: #22c55e;
+  --kuning: #fbbf24;
+  --merah: #ef4444;
+  --putih: #ffffff;
+  --abu: #f1f5f9;
+  --teks: #1e293b;
+  --teks-abu: #64748b;
+  --shadow: 0 4px 24px rgba(14,165,233,0.13);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 40%, #e0f7fa 100%);
+  min-height: 100vh;
+  color: var(--teks);
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #0369a1 0%, #0ea5e9 60%, #38bdf8 100%);
+  color: white;
+  text-align: center;
+  padding: 32px 20px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 50px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 40%, #e0f7fa 100%);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+.header-wave {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0.08;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.logo-area { position: relative; z-index: 1; }
+.logo-icon { font-size: 52px; display: block; margin-bottom: 6px; animation: wave 2s infinite; }
+@keyframes wave { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+.header h1 { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.header p { font-size: 14px; opacity: 0.9; margin-top: 4px; font-weight: 600; }
+.badge-buka {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 10px;
+  backdrop-filter: blur(8px);
+}
+.dot-hijau { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse-green 1.5s infinite; }
+@keyframes pulse-green { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+
+/* CONTAINER */
+.container { max-width: 560px; margin: -20px auto 40px; padding: 0 16px; position: relative; z-index: 2; }
+
+/* HARGA CARD */
+.harga-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.harga-card {
+  background: white;
+  border-radius: 16px;
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--biru);
+  transition: transform 0.2s;
+}
+.harga-card:hover { transform: translateY(-3px); }
+.harga-card.weekend { border-top-color: var(--kuning); }
+.harga-card.libur { border-top-color: var(--merah); }
+.harga-card .label { font-size: 11px; color: var(--teks-abu); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.harga-card .harga { font-size: 17px; font-weight: 900; color: var(--biru); margin: 4px 0 2px; }
+.harga-card.weekend .harga { color: #d97706; }
+.harga-card.libur .harga { color: var(--merah); }
+.harga-card .hari { font-size: 10px; color: var(--teks-abu); }
+
+/* FORM CARD */
+.form-card {
+  background: white;
+  border-radius: 24px;
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.form-card h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--teks);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teks);
+  margin-bottom: 6px;
+}
+.form-group label span { color: var(--merah); }
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: 'Nunito', sans-serif;
+  color: var(--teks);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: white;
+  appearance: none;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--biru);
+  box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+}
+.form-control::placeholder { color: #94a3b8; }
+select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* JENIS HARI BADGE */
+.jenis-hari-display {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  background: var(--abu);
+  color: var(--teks-abu);
+  border: 2px solid #e2e8f0;
+}
+.jenis-hari-display.weekday { background: #f0fdf4; color: var(--hijau); border-color: #bbf7d0; }
+.jenis-hari-display.weekend { background: #fffbeb; color: #d97706; border-color: #fde68a; }
+.jenis-hari-display.libur { background: #fef2f2; color: var(--merah); border-color: #fecaca; }
+
+/* TOTAL BOX */
+.total-box {
+  background: linear-gradient(135deg, #0369a1, #0ea5e9);
+  border-radius: 16px;
+  padding: 18px 20px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+.total-box .label { font-size: 14px; font-weight: 600; opacity: 0.9; }
+.total-box .amount { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+
+/* METODE PEMBAYARAN */
+.metode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.metode-btn {
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+  font-family: 'Nunito', sans-serif;
+}
+.metode-btn:hover { border-color: var(--biru); background: var(--biru-muda); }
+.metode-btn.active { border-color: var(--biru); background: var(--biru-muda); box-shadow: 0 0 0 3px rgba(14,165,233,0.2); }
+.metode-btn .ico { font-size: 24px; display: block; margin-bottom: 4px; }
+.metode-btn .nama { font-size: 12px; font-weight: 700; color: var(--teks); }
+.metode-btn .sub { font-size: 10px; color: var(--teks-abu); }
+
+/* TOMBOL PESAN */
+.btn-pesan {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #0369a1, #0ea5e9);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(14,165,233,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.btn-pesan:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(14,165,233,0.5); }
+.btn-pesan:active { transform: translateY(0); }
+.btn-pesan:disabled { background: #94a3b8; box-shadow: none; cursor: not-allowed; transform: none; }
+
+/* INFO NOTICE */
+.notice {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 12px;
+  color: #92400e;
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+/* JAM BUKA */
+.jam-info {
+  background: white;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.jam-info .jam-icon { font-size: 32px; }
+.jam-info .jam-detail { flex: 1; }
+.jam-info .jam-detail h3 { font-size: 14px; font-weight: 800; color: var(--teks); }
+.jam-info .jam-detail p { font-size: 12px; color: var(--teks-abu); margin-top: 2px; }
+.jam-badge { background: var(--biru-muda); color: var(--biru-tua); padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 800; }
+
+/* MODAL PEMBAYARAN */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  justify-content: center;
+  align-items: flex-end;
+}
+.modal-overlay.aktif { display: flex; }
+.modal-box {
+  background: white;
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px 40px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.modal-handle { width: 40px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 20px; }
+.modal-title { font-size: 20px; font-weight: 900; text-align: center; color: var(--teks); margin-bottom: 20px; }
+
+/* QR CODE AREA */
+.qr-area {
+  text-align: center;
+  margin: 20px 0;
+}
+.qr-img {
+  width: 200px; height: 200px;
+  border: 3px solid var(--biru);
+  border-radius: 16px;
+  display: inline-block;
+  background: white;
+  padding: 8px;
+}
+.qr-nominal {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--biru-tua);
+  margin: 12px 0 4px;
+}
+.qr-info { font-size: 12px; color: var(--teks-abu); }
+
+/* BOOKING INFO SUMMARY */
+.booking-summary {
+  background: var(--abu);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 16px 0;
+}
+.booking-summary .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 13px;
+}
+.booking-summary .row:last-child { border-bottom: none; }
+.booking-summary .row .key { color: var(--teks-abu); font-weight: 600; }
+.booking-summary .row .val { font-weight: 800; color: var(--teks); text-align: right; }
+.kode-booking {
+  background: linear-gradient(135deg, #0369a1, #0ea5e9);
+  color: white;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  margin: 12px 0;
+  font-family: monospace;
+}
+
+/* SUKSES STATE */
+.sukses-area { text-align: center; padding: 20px 0; }
+.sukses-icon { font-size: 64px; display: block; margin-bottom: 12px; animation: popIn 0.5s ease; }
+@keyframes popIn { 0%{transform:scale(0)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
+.sukses-title { font-size: 22px; font-weight: 900; color: var(--hijau); }
+.sukses-sub { font-size: 14px; color: var(--teks-abu); margin-top: 6px; }
+
+.btn-tutup-modal {
+  width: 100%;
+  padding: 14px;
+  background: var(--abu);
+  color: var(--teks);
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  margin-top: 12px;
+  transition: background 0.2s;
+}
+.btn-tutup-modal:hover { background: #e2e8f0; }
+
+.btn-konfirmasi {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  margin-top: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(34,197,94,0.4);
+}
+.btn-konfirmasi:hover { transform: translateY(-1px); }
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.step { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; }
+.step.aktif { background: var(--biru); color: white; }
+.step.done { background: var(--hijau); color: white; }
+.step.pending { background: #e2e8f0; color: var(--teks-abu); }
+.step-line { width: 40px; height: 2px; background: #e2e8f0; margin: auto; border-radius: 1px; }
+.step-line.done { background: var(--hijau); }
+
+.bayar-loket-box {
+  background: #f0fdf4;
+  border: 2px solid #bbf7d0;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin: 16px 0;
+}
+.bayar-loket-box .icon { font-size: 48px; margin-bottom: 8px; }
+.bayar-loket-box h3 { font-size: 16px; font-weight: 800; color: #15803d; }
+.bayar-loket-box p { font-size: 13px; color: #166534; margin-top: 6px; line-height: 1.5; }
+
+.loading-spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--teks-abu);
+  font-size: 12px;
+}
+
+/* Floating WA Button */
+.wa-float {
+  position: fixed;
+  bottom: 24px; right: 20px;
+  background: #25d366;
+  color: white;
+  border-radius: 50px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 999;
+  transition: all 0.2s;
+}
+.wa-float:hover { transform: scale(1.05); }
+
+@media (max-width: 400px) {
+  .harga-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .metode-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-wave"></div>
+  <div class="logo-area">
+    <span class="logo-icon">🏊</span>
+    <h1>Waterboom Situsari</h1>
+    <p>📍 Garut, Jawa Barat</p>
+    <div class="badge-buka">
+      <div class="dot-hijau"></div>
+      Buka Setiap Hari · 08.00 – 16.00 WIB
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- JAM BUKA -->
+  <div class="jam-info">
+    <div class="jam-icon">🕗</div>
+    <div class="jam-detail">
+      <h3>Jam Operasional</h3>
+      <p>Senin – Minggu & Hari Libur Nasional</p>
+    </div>
+    <div class="jam-badge">08:00–16:00</div>
+  </div>
+
+  <!-- HARGA TIKET -->
+  <div class="harga-grid">
+    <div class="harga-card">
+      <div class="label">Weekday</div>
+      <div class="harga" id="harga-weekday">Rp 20.000</div>
+      <div class="hari">Senin – Jumat</div>
+    </div>
+    <div class="harga-card weekend">
+      <div class="label">Weekend</div>
+      <div class="harga" id="harga-weekend">Rp 25.000</div>
+      <div class="hari">Sabtu – Minggu</div>
+    </div>
+    <div class="harga-card libur">
+      <div class="label">Hari Libur</div>
+      <div class="harga" id="harga-libur">Rp 30.000</div>
+      <div class="hari">Libur Nasional</div>
+    </div>
+  </div>
+
+  <!-- FORM BOOKING -->
+  <div class="form-card">
+    <h2>🎟️ Pesan Tiket</h2>
+
+    <div class="form-group">
+      <label>Nama Lengkap <span>*</span></label>
+      <input type="text" id="nama" class="form-control" placeholder="Contoh: Budi Santoso">
+    </div>
+
+    <div class="form-group">
+      <label>No. WhatsApp <span>*</span></label>
+      <input type="tel" id="nohp" class="form-control" placeholder="08xxxxxxxxxx">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tanggal Kunjungan <span>*</span></label>
+        <input type="date" id="tanggal" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Jam Masuk <span>*</span></label>
+        <select id="jam" class="form-control">
+          <option value="">-- Pilih --</option>
+          <option value="08:00">08.00 WIB</option>
+          <option value="09:00">09.00 WIB</option>
+          <option value="10:00">10.00 WIB</option>
+          <option value="11:00">11.00 WIB</option>
+          <option value="12:00">12.00 WIB</option>
+          <option value="13:00">13.00 WIB</option>
+          <option value="14:00">14.00 WIB</option>
+          <option value="15:00">15.00 WIB</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Jenis Hari</label>
+        <div class="jenis-hari-display" id="jenis-hari-display">Pilih tanggal dulu</div>
+        <input type="hidden" id="jenis-hari">
+      </div>
+      <div class="form-group">
+        <label>Jumlah Tiket <span>*</span></label>
+        <input type="number" id="jumlah" class="form-control" min="1" max="50" placeholder="1" value="1">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Asal Kota</label>
+      <input type="text" id="kota" class="form-control" placeholder="Contoh: Bandung">
+    </div>
+
+    <!-- TOTAL -->
+    <div class="total-box">
+      <div class="label">💰 Total Pembayaran</div>
+      <div class="amount" id="total-display">Rp 0</div>
+    </div>
+
+    <!-- METODE PEMBAYARAN -->
+    <div class="form-group">
+      <label>Metode Pembayaran <span>*</span></label>
+      <div class="metode-grid">
+        <div class="metode-btn" onclick="pilihMetode('qris')" id="btn-qris">
+          <span class="ico">📱</span>
+          <span class="nama">QRIS</span>
+          <span class="sub">Scan & Bayar</span>
+        </div>
+        <div class="metode-btn" onclick="pilihMetode('loket')" id="btn-loket">
+          <span class="ico">🏪</span>
+          <span class="nama">Bayar di Loket</span>
+          <span class="sub">Bayar Langsung</span>
+        </div>
+        <div class="metode-btn" onclick="pilihMetode('bca')" id="btn-bca">
+          <span class="ico">🏦</span>
+          <span class="nama">Transfer BCA</span>
+          <span class="sub">ATM / Mobile</span>
+        </div>
+        <div class="metode-btn" onclick="pilihMetode('bri')" id="btn-bri">
+          <span class="ico">🏦</span>
+          <span class="nama">Transfer BRI</span>
+          <span class="sub">ATM / Mobile</span>
+        </div>
+      </div>
+      <input type="hidden" id="metode-bayar">
+    </div>
+
+    <button class="btn-pesan" onclick="prosesBooking()" id="btn-submit">
+      🎫 PESAN SEKARANG
+    </button>
+
+    <div class="notice">
+      ℹ️ Tiket berlaku pada tanggal yang dipilih. Simpan kode booking sebagai bukti masuk.
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL PEMBAYARAN -->
+<div class="modal-overlay" id="modal-bayar">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div id="modal-konten"></div>
+  </div>
+</div>
+
+<a href="https://wa.me/628xxxxxxxxxx" class="wa-float" target="_blank">
+  💬 Hubungi Kami
+</a>
+
+<div class="footer">
+  © 2025 Waterboom Situsari Garut<br>
+  Jl. Situsari, Garut, Jawa Barat
+</div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// =====================================================
+// 🔥 GANTI DENGAN FIREBASE CONFIG ANDA
+// =====================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDe21NfWg9BnzjgrRlx-fQfOyfWcBGom3E",
+  authDomain: "waterboom-situsari-829af.firebaseapp.com",
+  databaseURL: "https://waterboom-situsari-829af-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "waterboom-situsari-829af",
+  storageBucket: "waterboom-situsari-829af.firebasestorage.app",
+  messagingSenderId: "999272040230",
+  appId: "1:999272040230:web:240dcea121d4237297a3e7"
+};
+// =====================================================
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Expose to window
+window._db = db;
+window._ref = ref;
+window._push = push;
+window._set = set;
+window._firebaseReady = true;
+</script>
+
+<script>
+// ===== KONFIGURASI HARGA (sesuaikan) =====
+const HARGA = {
+  weekday: 20000,
+  weekend: 25000,
+  libur: 30000
+};
+
+// Daftar tanggal libur nasional 2025 (format YYYY-MM-DD)
+const LIBUR_NASIONAL = [
+  "2025-01-01","2025-01-27","2025-01-28","2025-01-29",
+  "2025-02-12","2025-03-29","2025-03-31",
+  "2025-04-01","2025-04-18","2025-04-20",
+  "2025-05-01","2025-05-12","2025-05-29",
+  "2025-06-01","2025-06-06","2025-06-07","2025-06-08","2025-06-09",
+  "2025-07-07","2025-08-17",
+  "2025-09-05","2025-10-02","2025-12-25","2025-12-26"
+];
+
+let metodeTerpilih = '';
+let dataBooking = {};
+
+// Set min tanggal = hari ini
+const today = new Date();
+const todayStr = today.toISOString().split('T')[0];
+document.getElementById('tanggal').min = todayStr;
+
+// Update harga display dari config
+document.getElementById('harga-weekday').textContent = 'Rp ' + HARGA.weekday.toLocaleString('id-ID');
+document.getElementById('harga-weekend').textContent = 'Rp ' + HARGA.weekend.toLocaleString('id-ID');
+document.getElementById('harga-libur').textContent = 'Rp ' + HARGA.libur.toLocaleString('id-ID');
+
+function getJenisHari(tglStr) {
+  if (!tglStr) return null;
+  if (LIBUR_NASIONAL.includes(tglStr)) return 'libur';
+  const d = new Date(tglStr + 'T00:00:00');
+  const dow = d.getDay(); // 0=Minggu, 6=Sabtu
+  if (dow === 0 || dow === 6) return 'weekend';
+  return 'weekday';
+}
+
+document.getElementById('tanggal').addEventListener('change', updateJenisHari);
+document.getElementById('jumlah').addEventListener('input', updateTotal);
+
+function updateJenisHari() {
+  const tgl = document.getElementById('tanggal').value;
+  const jenis = getJenisHari(tgl);
+  const el = document.getElementById('jenis-hari-display');
+  const input = document.getElementById('jenis-hari');
+
+  if (!jenis) {
+    el.textContent = 'Pilih tanggal dulu';
+    el.className = 'jenis-hari-display';
+    input.value = '';
+    return;
+  }
+
+  const label = { weekday: '📅 Weekday', weekend: '🌟 Weekend', libur: '🎉 Hari Libur' };
+  el.textContent = label[jenis];
+  el.className = 'jenis-hari-display ' + jenis;
+  input.value = jenis;
+  updateTotal();
+}
+
+function updateTotal() {
+  const jenis = document.getElementById('jenis-hari').value;
+  const jumlah = parseInt(document.getElementById('jumlah').value) || 0;
+  if (!jenis || jumlah < 1) { document.getElementById('total-display').textContent = 'Rp 0'; return; }
+  const total = HARGA[jenis] * jumlah;
+  document.getElementById('total-display').textContent = 'Rp ' + total.toLocaleString('id-ID');
+}
+
+function pilihMetode(id) {
+  metodeTerpilih = id;
+  document.querySelectorAll('.metode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + id).classList.add('active');
+  document.getElementById('metode-bayar').value = id;
+}
+
+function generateKode() {
+  return 'WB' + Date.now().toString().slice(-6);
+}
+
+function formatRupiah(n) {
+  return 'Rp ' + Number(n).toLocaleString('id-ID');
+}
+
+function prosesBooking() {
+  const nama = document.getElementById('nama').value.trim();
+  const nohp = document.getElementById('nohp').value.trim();
+  const tanggal = document.getElementById('tanggal').value;
+  const jam = document.getElementById('jam').value;
+  const jenisHari = document.getElementById('jenis-hari').value;
+  const jumlah = parseInt(document.getElementById('jumlah').value);
+  const kota = document.getElementById('kota').value.trim();
+  const metode = document.getElementById('metode-bayar').value;
+
+  if (!nama) { alert('Nama lengkap wajib diisi!'); return; }
+  if (!nohp) { alert('No. WhatsApp wajib diisi!'); return; }
+  if (!tanggal) { alert('Tanggal kunjungan wajib diisi!'); return; }
+  if (!jam) { alert('Jam masuk wajib dipilih!'); return; }
+  if (!jumlah || jumlah < 1) { alert('Jumlah tiket minimal 1!'); return; }
+  if (!metode) { alert('Pilih metode pembayaran!'); return; }
+
+  const total = HARGA[jenisHari] * jumlah;
+  const kode = generateKode();
+
+  dataBooking = {
+    kode, nama, nohp, tanggal, jam,
+    jenisHari, jumlah, total, kota,
+    metode, statusBayar: (metode === 'loket') ? 'pending' : 'belum_bayar',
+    createdAt: new Date().toISOString(),
+    sumber: 'online'
+  };
+
+  tampilkanModal();
+}
+
+function tampilkanModal() {
+  const m = document.getElementById('metode-bayar').value;
+  let konten = '';
+
+  const summary = `
+    <div class="booking-summary">
+      <div class="row"><span class="key">Kode Booking</span><span class="val" style="color:var(--biru);font-size:15px;letter-spacing:2px;">${dataBooking.kode}</span></div>
+      <div class="row"><span class="key">Nama</span><span class="val">${dataBooking.nama}</span></div>
+      <div class="row"><span class="key">Tanggal</span><span class="val">${formatTanggal(dataBooking.tanggal)}</span></div>
+      <div class="row"><span class="key">Jam Masuk</span><span class="val">${dataBooking.jam} WIB</span></div>
+      <div class="row"><span class="key">Tiket</span><span class="val">${dataBooking.jumlah} orang (${dataBooking.jenisHari})</span></div>
+      <div class="row"><span class="key">Total</span><span class="val" style="color:var(--biru);font-size:16px;">${formatRupiah(dataBooking.total)}</span></div>
+    </div>`;
+
+  if (m === 'qris') {
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BayarWaterboom_${dataBooking.kode}_${dataBooking.total}`;
+    konten = `
+      <div class="step-indicator">
+        <div class="step aktif">1</div>
+        <div class="step-line"></div>
+        <div class="step pending">2</div>
+        <div class="step-line"></div>
+        <div class="step pending">3</div>
+      </div>
+      <div class="modal-title">📱 Scan QR untuk Bayar</div>
+      <div class="qr-area">
+        <img src="${qrUrl}" class="qr-img" alt="QR Code">
+        <div class="qr-nominal">${formatRupiah(dataBooking.total)}</div>
+        <div class="qr-info">Scan menggunakan GoPay, OVO, DANA, LinkAja, atau m-Banking</div>
+      </div>
+      ${summary}
+      <button class="btn-konfirmasi" onclick="konfirmasiPembayaran()">✅ Saya Sudah Bayar</button>
+      <button class="btn-tutup-modal" onclick="tutupModal()">Batal</button>`;
+  } else if (m === 'loket') {
+    konten = `
+      <div class="modal-title">🏪 Booking Berhasil!</div>
+      <div class="bayar-loket-box">
+        <div class="icon">🎫</div>
+        <h3>Bayar di Loket Saat Datang</h3>
+        <p>Tunjukkan kode booking ini kepada petugas loket. Pembayaran dilakukan tunai saat tiba di lokasi.</p>
+      </div>
+      <div class="kode-booking">${dataBooking.kode}</div>
+      ${summary}
+      <button class="btn-konfirmasi" onclick="simpanDanSelesai()">✅ Selesai & Simpan Booking</button>
+      <button class="btn-tutup-modal" onclick="tutupModal()">Batal</button>`;
+  } else {
+    // Transfer bank
+    const namaBank = { bca: 'BCA', bri: 'BRI', bni: 'BNI' };
+    const norek = { bca: '1234567890', bri: '0987654321', bni: '1122334455' };
+    konten = `
+      <div class="modal-title">🏦 Transfer ${namaBank[m]}</div>
+      <div class="bayar-loket-box" style="background:#eff6ff;border-color:#bfdbfe;">
+        <div class="icon">💳</div>
+        <h3 style="color:#1d4ed8;">Rekening ${namaBank[m]}</h3>
+        <div style="font-size:22px;font-weight:900;color:#1e40af;margin:8px 0;letter-spacing:2px;">${norek[m] || '123-456-789'}</div>
+        <p style="color:#1e3a8a;">a.n. Waterboom Situsari Garut</p>
+        <div style="margin-top:10px;font-size:18px;font-weight:900;color:#1d4ed8;">${formatRupiah(dataBooking.total)}</div>
+        <p style="color:#1e3a8a;margin-top:4px;">Transfer tepat nominal ini</p>
+      </div>
+      ${summary}
+      <button class="btn-konfirmasi" onclick="konfirmasiPembayaran()">✅ Saya Sudah Transfer</button>
+      <button class="btn-tutup-modal" onclick="tutupModal()">Batal</button>`;
+  }
+
+  document.getElementById('modal-konten').innerHTML = konten;
+  document.getElementById('modal-bayar').classList.add('aktif');
+}
+
+async function konfirmasiPembayaran() {
+  dataBooking.statusBayar = 'pending';
+  await simpanKeFirebase();
+}
+
+async function simpanDanSelesai() {
+  await simpanKeFirebase();
+}
+
+async function simpanKeFirebase() {
+  const btn = document.querySelector('.btn-konfirmasi');
+  if (btn) btn.innerHTML = '<div class="loading-spinner"></div> Menyimpan...';
+
+  try {
+    if (window._firebaseReady) {
+      const bookRef = window._push(window._ref(window._db, 'bookings'));
+      await window._set(bookRef, dataBooking);
+      tampilkanSukses();
+    } else {
+      // Fallback: simpan ke localStorage jika Firebase belum dikonfigurasi
+      const existing = JSON.parse(localStorage.getItem('bookings_waterboom') || '[]');
+      existing.push(dataBooking);
+      localStorage.setItem('bookings_waterboom', JSON.stringify(existing));
+      tampilkanSukses();
+    }
+  } catch (e) {
+    console.error('Firebase error:', e);
+    alert('⚠️ Gagal menyimpan. Cek konfigurasi Firebase di file index.html');
+    if (btn) btn.textContent = '✅ Saya Sudah Bayar';
+  }
+}
+
+function tampilkanSukses() {
+  document.getElementById('modal-konten').innerHTML = `
+    <div class="sukses-area">
+      <span class="sukses-icon">🎉</span>
+      <div class="sukses-title">Booking Berhasil!</div>
+      <div class="sukses-sub">Tiket Anda telah tersimpan</div>
+    </div>
+    <div class="kode-booking">${dataBooking.kode}</div>
+    <div class="booking-summary">
+      <div class="row"><span class="key">Nama</span><span class="val">${dataBooking.nama}</span></div>
+      <div class="row"><span class="key">Tanggal</span><span class="val">${formatTanggal(dataBooking.tanggal)}</span></div>
+      <div class="row"><span class="key">Jam</span><span class="val">${dataBooking.jam} WIB</span></div>
+      <div class="row"><span class="key">Tiket</span><span class="val">${dataBooking.jumlah} orang</span></div>
+      <div class="row"><span class="key">Total</span><span class="val" style="color:var(--biru)">${formatRupiah(dataBooking.total)}</span></div>
+      <div class="row"><span class="key">Metode</span><span class="val">${namaMetode(dataBooking.metode)}</span></div>
+      <div class="row"><span class="key">Status</span><span class="val" style="color:var(--kuning)">⏳ ${dataBooking.statusBayar === 'pending' ? 'Pending Verifikasi' : 'Menunggu Konfirmasi'}</span></div>
+    </div>
+    <div class="notice">📸 Screenshot halaman ini sebagai bukti booking Anda.</div>
+    <button class="btn-tutup-modal" onclick="tutupDanReset()" style="background:var(--biru);color:white;margin-top:12px;">🏠 Kembali ke Beranda</button>`;
+}
+
+function tutupModal() {
+  document.getElementById('modal-bayar').classList.remove('aktif');
+}
+
+function tutupDanReset() {
+  tutupModal();
+  document.getElementById('nama').value = '';
+  document.getElementById('nohp').value = '';
+  document.getElementById('tanggal').value = '';
+  document.getElementById('jam').value = '';
+  document.getElementById('jumlah').value = '1';
+  document.getElementById('kota').value = '';
+  document.getElementById('jenis-hari').value = '';
+  document.getElementById('jenis-hari-display').textContent = 'Pilih tanggal dulu';
+  document.getElementById('jenis-hari-display').className = 'jenis-hari-display';
+  document.getElementById('total-display').textContent = 'Rp 0';
+  document.querySelectorAll('.metode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('metode-bayar').value = '';
+  metodeTerpilih = '';
+}
+
+function formatTanggal(str) {
+  if (!str) return '-';
+  const d = new Date(str + 'T00:00:00');
+  return d.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+}
+
+function namaMetode(m) {
+  const map = { qris:'QRIS', loket:'Bayar di Loket', bca:'Transfer BCA', bri:'Transfer BRI', bni:'Transfer BNI' };
+  return map[m] || m;
+}
+
+// Close modal on overlay click
+document.getElementById('modal-bayar').addEventListener('click', function(e) {
+  if (e.target === this) tutupModal();
+});
+</script>
+</body>
+</html>
